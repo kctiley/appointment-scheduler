@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1 Sign In
+  if errors
+    for error in errors
+      p(style='color: red')= error
+
+  p Please fill out the form:
+  form(id='signUpForm', name'signUpForm', action='/users/sign_in', method='post')
+    p Email (required)
+      input(type='text' id='email' name='email')
+    p Password (required)
+      input(type='text' id='password' name='password')
+    p Password Confirmation (required)
+      input(type='text' id='passConfirm' name='passConfirm')
+    p
+      button(type='submit') Submit
