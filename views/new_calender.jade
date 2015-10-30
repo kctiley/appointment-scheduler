@@ -1,4 +1,54 @@
 extends layout
 
-content block
-  h1=title
+block content
+  h1 Create new calender
+  p= user.email + " is signed in."
+
+  h3 STEPS:
+  p
+    ul
+      li 1. Enter an address for the starting point
+      li 2. Select number of location zones (from 1 to 14).  
+      li 3. A map will appear for each zone.  Select an area for each map.
+      li 4. Select a day (or multiple days) of the week for each zone.
+      li 5. Select estimated time for each appointment (ex. 0.25 = 15 min, 1.5 = 1 hour 30 min)
+  form(name='calenderForm', id='calenderForm', action='/calenders/', method='post')
+    p Enter an address for the starting point
+      p Street
+        input(id='street', name='street')
+      p City
+        input(id='city', name='city') 
+    p Select number of location zones
+      select(name='zoneQuantity', id='zoneQuantity')
+        option(value= 1) 1
+        option(value= 2) 2
+        option(value= 3) 3
+        option(value= 4) 4
+        option(value= 5) 5
+        option(value= 6) 6
+        option(value= 7) 7
+        option(value= 8) 8
+        option(value= 9) 9
+        option(value= 10) 10
+        option(value= 11) 11
+        option(value= 12) 12
+        option(value= 13) 13
+        option(value= 14) 14
+      p
+        button(type='submit', name='submitButton',id='submitButton') Submit
+  p Experiment with initial map setup
+
+  h1 Calculate your route
+  form#calculate-route(name='calculate-route', action='#', method='get')
+    label(for='from') From:
+    input#from(type='text', name='from', required='required', placeholder='An address', size='30')
+    a#from-link(href='#') Get my position
+    br
+    label(for='to') To:
+    input#to(type='text', name='to', required='required', placeholder='Another address', size='30')
+    a#to-link(href='#') Get my position
+    br
+    input(type='submit')
+    input(type='reset')
+  #map
+  p#error

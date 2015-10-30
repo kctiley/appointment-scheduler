@@ -11,7 +11,8 @@ router.get('/', function(req, res, next) {
 
 
 router.get('/new', function(req, res, next) {
-  res.send('see calenders.js and create new jade');
+  console.log(req.session.user.email);
+  res.render('new_calender', {user: req.session.user});
 });
 
 module.exports = router;
