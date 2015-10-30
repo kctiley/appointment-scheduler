@@ -42,7 +42,7 @@ router.post('/sign_up', function(req, res, next) {
  
         users.insert({email: req.body.email, passwordHash: passwordHash}, function(err, record){
           req.session.user = record;
-          res.render('users_homepage', {loggedIn: true, user: req.session.user})
+          res.render('users_homepage', {user: req.session.user})
         })
       };
     })
@@ -66,26 +66,22 @@ router.post('/sign_in', function(req, res, next){
   }
   else{
     users.findOne({email: req.body.email}, function(err, record){ 
-      if(record){
-        req.session.email = req.body.email;
-        var password = req.body.password;
-        if(bcrypt.compareSync(password, record.passwordHash)){
-          req.session.user = record;
-          res.render('users_homepage', {loggedIn: true, user: req.session.user})
-        }
-        else{
-          errors.push('Password incorrect')
-          res.render('sign_in', {errors: errors})              
-        }
+      if(!record){
+         errors.push('Cannot find user email')
+        res.render('sign_in', {errors: errors}) 
+      }
+      var password = req.body.password;
+      if(bcrypt.compareSync(password, record.passwordHash)){
+        req.session.user = record;
+        res.render('users_homepage', {user: req.session.user})
       }
       else{
-        errors.push('Cannot find user email')
-        res.render('sign_in', {errors: errors})      
+        errors.push('Password incorrect')
+        res.render('sign_in', {errors: errors})              
       }
     })
   }
 })  
-
 
 
 
