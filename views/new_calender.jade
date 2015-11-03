@@ -14,53 +14,50 @@ html
 
   body
     h1 SKedule Navigator - Create schedule zones
+    button(id='startNewZone') Start a new zone
     #map
-    
+    #info
+
     script.
-      var randColor = function(){
-        var color = Math.random();
-        if(color < .5){
-          return '#C80000'
-        }
-        else{
-          return '#3300FF'
-        }
-      }
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 39.7392358, lng: -104.990251},
-          zoom: 10
-        });
-        var drawingManager = new google.maps.drawing.DrawingManager({
-          drawingMode: google.maps.drawing.OverlayType.MARKER,
-          drawingControl: true,
-          drawingControlOptions: {
-            position: google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: [
-              google.maps.drawing.OverlayType.POLYGON,
-              google.maps.drawing.OverlayType.CIRCLE,
-            ]
-          },
-          markerOptions: {icon: 'images/beachflag.png'},
-          polygonOptions: {
-            fillColor: randColor(),
-            fillOpacity: .25,
-            strokeWeight: 1,
-            clickable: false,
+        function initMap() {
+          var map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 39.7392358, lng: -104.990251},
+            zoom: 10
+          });
+          
+          var zoneCoords = [
+            new google.maps.LatLng(39.8, -105),
+            new google.maps.LatLng(39.8, -104.8),
+            new google.maps.LatLng(39.7, -104.8),  
+            new google.maps.LatLng(39.7, -105)
+          ];
+          zonePolygon = new google.maps.Polygon({
+            paths: zoneCoords,
+            draggable: true,
             editable: true,
-            draggable: true
-       
-           },
-          circleOptions: {
-            fillColor: '#ffff00',
-            fillOpacity: .25,
-            strokeWeight: 1,
-            clickable: false,
-            editable: true,
-            zIndex: 1,
-            draggable: true
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.45,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.25
+          });
+
+          var startNewZone = document.querySelector('#startNewZone')
+          startNewZone.addEventListener('click', function(){
+            zonePolygon.setMap(map);
+            google.maps.event.addListener(zonePolygon, "dragend", getPolygonCoords);
+            google.maps.event.addListener(zonePolygon.getPath(), "insert_at", getPolygonCoords);
+            google.maps.event.addListener(zonePolygon.getPath(), "remove_at", getPolygonCoords);
+            google.maps.event.addListener(zonePolygon.getPath(), "set_at", getPolygonCoords);
+          })
+        }
+        function getPolygonCoords() {
+          var len = zonePolygon.getPath().getLength();
+          var htmlStr = "";
+          for (var i = 0; i < len; i++) {
+            htmlStr += zonePolygon.getPath().getAt(i).toUrlValue(5) + "<br>";
           }
-        });
-        drawingManager.setMap(map);
-      }
+          document.getElementById('info').innerHTML = htmlStr;
+        }
+
     script(src='https://maps.googleapis.com/maps/api/js?key=' + process.env.YOUR_API_KEY + '&signed_in=true&libraries=drawing&callback=initMap', async='', defer='')

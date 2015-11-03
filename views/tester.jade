@@ -19,22 +19,20 @@ html
     #info
 
     script.
-      // var start = document.querySelector('#startNewZone');
-      // start.addEventListener('click',function(e) 
         function initMap() {
           var map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 39.7392358, lng: -104.990251},
             zoom: 10
           });
-          
-          var startCoords = [
+        }  
+          var zoneCoords = [
             new google.maps.LatLng(39.8, -105),
             new google.maps.LatLng(39.8, -104.8),
             new google.maps.LatLng(39.7, -104.8),  
             new google.maps.LatLng(39.7, -105)
           ];
-          startPolygon = new google.maps.Polygon({
-            paths: startCoords,
+          zonePolygon = new google.maps.Polygon({
+            paths: zoneCoords,
             draggable: true,
             editable: true,
             strokeColor: '#FF0000',
@@ -44,20 +42,22 @@ html
             fillOpacity: 0.25
           });
 
-          startPolygon.setMap(map);
-          google.maps.event.addListener(startPolygon, "dragend", getPolygonCoords);
-          google.maps.event.addListener(startPolygon.getPath(), "insert_at", getPolygonCoords);
-          google.maps.event.addListener(startPolygon.getPath(), "remove_at", getPolygonCoords);
-          google.maps.event.addListener(startPolygon.getPath(), "set_at", getPolygonCoords);
-
-        }
+          var startNewZone = document.querySelector('#startNewZone')
+          startNewZone.addEventListener('click', function(){
+            zonePolygon.setMap(map);
+            google.maps.event.addListener(zonePolygon, "dragend", getPolygonCoords);
+            google.maps.event.addListener(zonePolygon.getPath(), "insert_at", getPolygonCoords);
+            google.maps.event.addListener(zonePolygon.getPath(), "remove_at", getPolygonCoords);
+            google.maps.event.addListener(zonePolygon.getPath(), "set_at", getPolygonCoords);
+          })
+        
         function getPolygonCoords() {
-          var len = startPolygon.getPath().getLength();
+          var len = zonePolygon.getPath().getLength();
           var htmlStr = "";
           for (var i = 0; i < len; i++) {
-            htmlStr += startPolygon.getPath().getAt(i).toUrlValue(5) + "<br>";
+            htmlStr += zonePolygon.getPath().getAt(i).toUrlValue(5) + "<br>";
           }
           document.getElementById('info').innerHTML = htmlStr;
         }
-      //- })
+
     script(src='https://maps.googleapis.com/maps/api/js?key=' + process.env.YOUR_API_KEY + '&signed_in=true&libraries=drawing&callback=initMap', async='', defer='')
