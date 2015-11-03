@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/new', function(req, res, next) {
   console.log(req.session.user.email);
-  res.render('new_calender', {user: req.session.user});
+  res.render('tester', {user: req.session.user});
 });
 
 module.exports = router;
