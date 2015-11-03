@@ -24,7 +24,7 @@ html
             center: {lat: 39.7392358, lng: -104.990251},
             zoom: 10
           });
-        }  
+          
           var zoneCoords = [
             new google.maps.LatLng(39.8, -105),
             new google.maps.LatLng(39.8, -104.8),
@@ -50,7 +50,7 @@ html
             google.maps.event.addListener(zonePolygon.getPath(), "remove_at", getPolygonCoords);
             google.maps.event.addListener(zonePolygon.getPath(), "set_at", getPolygonCoords);
           })
-        
+        }
         function getPolygonCoords() {
           var len = zonePolygon.getPath().getLength();
           var htmlStr = "";
