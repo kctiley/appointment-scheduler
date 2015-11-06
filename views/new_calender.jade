@@ -15,6 +15,7 @@ html
   body
     h1 SKedule Navigator - Create schedule zones
     button(id='startNewZone') Start a new zone
+    button(id='saveZone') Save zone
     #map
     #info
 
@@ -31,33 +32,52 @@ html
             new google.maps.LatLng(39.7, -104.8),  
             new google.maps.LatLng(39.7, -105)
           ];
-          zonePolygon = new google.maps.Polygon({
-            paths: zoneCoords,
-            draggable: true,
-            editable: true,
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.45,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.25
-          });
+
+
 
           var startNewZone = document.querySelector('#startNewZone')
           startNewZone.addEventListener('click', function(){
-            zonePolygon.setMap(map);
-            google.maps.event.addListener(zonePolygon, "dragend", getPolygonCoords);
-            google.maps.event.addListener(zonePolygon.getPath(), "insert_at", getPolygonCoords);
-            google.maps.event.addListener(zonePolygon.getPath(), "remove_at", getPolygonCoords);
-            google.maps.event.addListener(zonePolygon.getPath(), "set_at", getPolygonCoords);
-          })
-        }
-        function getPolygonCoords() {
-          var len = zonePolygon.getPath().getLength();
-          var htmlStr = "";
-          for (var i = 0; i < len; i++) {
-            htmlStr += zonePolygon.getPath().getAt(i).toUrlValue(5) + "<br>";
-          }
-          document.getElementById('info').innerHTML = htmlStr;
-        }
+            zonePolygon = new google.maps.Polygon({
+              paths: zoneCoords,
+              draggable: true,
+              editable: true,
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.45,
+              strokeWeight: 2,
+              fillColor: '#FF0000',
+              fillOpacity: 0.25
+            });
 
+            zonePolygon.setMap(map);
+            google.maps.event.addListener(zonePolygon.getPath(), "dragend", getPolygonCoords);
+            google.maps.event.addListener(zonePolygon.getPath(), "insert_at", getPolygonCoords);
+            //- google.maps.event.addListener(zonePolygon.getPath(), "remove_at", getPolygonCoords);
+            //- google.maps.event.addListener(zonePolygon.getPath(), "set_at", getPolygonCoords);
+
+          })
+
+          var zoneCounter = 0;
+          
+          function getPolygonCoords() {
+            var zoneId = "zone" + zoneCounter.toString()
+
+            var len = zonePolygon.getPath().getLength();
+            var htmlStr = "";
+            for (var i = 0; i < len; i++) {
+              htmlStr += zonePolygon.getPath().getAt(i).toUrlValue(5) + "<br>";
+            }
+              //- var body = document.getElementById('#info')
+            var p = document.createElement("div")
+            p.setAttribute("id", zoneId);
+            p.innerHTML = htmlStr;
+
+            var startNewZone = document.querySelector('#saveZone')
+            saveZone.addEventListener('click', function(){
+              zoneCounter +=1;
+              document.getElementById('info').appendChild(p);
+            })
+          }
+
+        }
+  
     script(src='https://maps.googleapis.com/maps/api/js?key=' + process.env.YOUR_API_KEY + '&signed_in=true&libraries=drawing&callback=initMap', async='', defer='')
